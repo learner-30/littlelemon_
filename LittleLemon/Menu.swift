@@ -8,15 +8,61 @@
 import SwiftUI
 
 struct Menu: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    
     var body: some View {
         VStack {
             Text("Little Lemon")
             Text("Chicago")
             Text("Little Lemon restaurant is ...")
-            List {
-                
+            FetchedObjects() {
+                (dishes: [Dish]) in
+                List {
+                    ForEach(dishes) { dish in
+                        HStack {
+                            Text(dish.title!)
+                            Spacer()
+                            Text("$ " + dish.price!)
+                            Spacer().frame(width: 50)
+                            AsyncImage(url: URL(string: dish.image!)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } placeholder: {
+                                    ProgressView()
+                                }
+                            .frame(width: 100, height: 100)
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                getMenuData()
             }
         }
+    }
+    
+    func getMenuData() {
+        PersistenceController.shared.clear()
+        
+        let url = URL(string: "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")!
+        let request = URLRequest(url: url)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                let fullMenu = try? JSONDecoder().decode(MenuList.self, from: data)
+                if let menuItems = fullMenu?.menu {
+                    for menuItem in menuItems {
+                        let dish = Dish(context: viewContext)
+                        dish.title = menuItem.title
+                        dish.image = menuItem.image
+                        dish.price = menuItem.price
+                    }
+                    try? viewContext.save()
+                }
+            }
+        }
+
+        task.resume()
     }
 }
 
