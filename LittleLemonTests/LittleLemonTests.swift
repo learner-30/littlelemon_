@@ -5,13 +5,18 @@
 //  Created by Xcode on 2025/03/05.
 //
 
-import Testing
+import XCTest
 @testable import LittleLemon
 
-struct LittleLemonTests {
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+final class DishesModelTests: XCTestCase {
+    func test_DishesModel_getFiveDishes() {
+        let expectation = self.expectation(description: "Download dishes and update menuItems")
+        let dishesModel = DishesModel()
+        
+        dishesModel.getMenuData(PersistenceController.shared.container.viewContext) {
+            XCTAssertEqual(dishesModel.menuItems.count, 5)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
     }
-
 }

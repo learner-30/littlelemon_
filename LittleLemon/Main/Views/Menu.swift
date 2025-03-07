@@ -46,7 +46,7 @@ struct Menu: View {
             }
             .onAppear {
                 if !isLoaded {
-                    dishesModel.getMenuData(viewContext)
+                    dishesModel.getMenuData(viewContext) { }  // added { } for parameter 'completion'
                     isLoaded = true
                 }
                 

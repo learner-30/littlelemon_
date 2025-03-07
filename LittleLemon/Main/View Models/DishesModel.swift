@@ -12,7 +12,7 @@ import CoreData
 class DishesModel: ObservableObject {
     @Published var menuItems = [MenuItem]()
     
-    func getMenuData(_ context:NSManagedObjectContext) {
+    func getMenuData(_ context:NSManagedObjectContext, completion: @escaping () -> Void) {
         PersistenceController.shared.clear()
         
         let url = URL(string: "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")!
@@ -20,14 +20,20 @@ class DishesModel: ObservableObject {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 let fullMenu = try? JSONDecoder().decode(MenuList.self, from: data)
-                if let menuItems = fullMenu?.menu {
-                    for menuItem in menuItems {
-                        let dish = Dish(context: context)
-                        dish.title = menuItem.title
-                        dish.image = menuItem.image
-                        dish.price = menuItem.price
+                if let items = fullMenu?.menu {
+                    DispatchQueue.main.async {
+                        for menuItem in items {
+                            let dish = Dish(context: context)
+                            dish.title = menuItem.title
+                            dish.image = menuItem.image
+                            dish.price = menuItem.price
+                        }
+                        try? context.save()
                     }
-                    try? context.save()
+                    context.perform {
+                        self.menuItems = items
+                        completion()
+                    }
                 }
             }
         }
