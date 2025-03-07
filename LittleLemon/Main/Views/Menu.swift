@@ -10,6 +10,7 @@ import SwiftUI
 struct Menu: View {
     @Environment(\.managedObjectContext) private var viewContext
     
+    @ObservedObject var dishesModel = DishesModel()
     @State var searchText = ""
     @State var isLoaded = false
     
@@ -45,35 +46,12 @@ struct Menu: View {
             }
             .onAppear {
                 if !isLoaded {
-                    getMenuData()
+                    dishesModel.getMenuData(viewContext)
                     isLoaded = true
                 }
                 
             }
         }
-    }
-    
-    func getMenuData() {
-        PersistenceController.shared.clear()
-        
-        let url = URL(string: "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")!
-        let request = URLRequest(url: url)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data {
-                let fullMenu = try? JSONDecoder().decode(MenuList.self, from: data)
-                if let menuItems = fullMenu?.menu {
-                    for menuItem in menuItems {
-                        let dish = Dish(context: viewContext)
-                        dish.title = menuItem.title
-                        dish.image = menuItem.image
-                        dish.price = menuItem.price
-                    }
-                    try? viewContext.save()
-                }
-            }
-        }
-
-        task.resume()
     }
     
     func buildSortDescriptors() -> [NSSortDescriptor] {
