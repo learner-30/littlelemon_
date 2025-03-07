@@ -18,14 +18,84 @@ struct Onboarding: View {
     @State var email = ""
     @State var isLoggedIn = false
     
+    @State var firstNameTouched = false
+    @State var lastNameTouched = false
+    @State var emailTouched = false
+    
+    var isFirstNameValid: Bool {
+        !firstName.isEmpty
+    }
+    
+    var isLastNameValid: Bool {
+        !firstName.isEmpty
+    }
+    
+    var isEmailValid: Bool {
+        let emailRegex = #"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$"#
+        return NSPredicate(format: "SELF MATCHES[c] %@", emailRegex).evaluate(with: email)
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("First Name", text: $firstName)
-                TextField("Last Name", text: $lastName)
-                TextField("Email", text: $email)
+                VStack {
+                    TextField("First Name", text: $firstName, onEditingChanged: { isEditting in
+                        if !isEditting { firstNameTouched = true}
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                        .stroke(firstNameTouched && !isFirstNameValid ? Color.red : Color.gray, lineWidth: 1))
+                    
+                    if firstNameTouched && !isFirstNameValid {
+                        HStack {
+                            Text("Required").foregroundStyle(Color.red)
+                            Spacer()
+                        }
+                    }
+                }
+                .frame(height: 100, alignment: .top)
+                
+                VStack {
+                    TextField("Last Name", text: $lastName, onEditingChanged: { isEditting in
+                        if !isEditting { lastNameTouched = true}
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                        .stroke(lastNameTouched && !isLastNameValid ? Color.red : Color.gray, lineWidth: 1))
+                    
+                    if lastNameTouched && !isLastNameValid {
+                        HStack {
+                            Text("Required").foregroundStyle(Color.red)
+                            Spacer()
+                        }
+                    }
+                }
+                .frame(height: 100, alignment: .top)
+                
+                VStack {
+                    TextField("Email", text: $email, onEditingChanged: { isEditting in
+                        if !isEditting { emailTouched = true}
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(RoundedRectangle(cornerRadius: 8)
+                        .stroke(emailTouched && !isEmailValid ? Color.red : Color.gray, lineWidth: 1))
+                    .keyboardType(.emailAddress)
+                    
+                    if emailTouched && !isEmailValid {
+                        HStack {
+                            Text(email.isEmpty ? "Required" : "Invalid email").foregroundStyle(Color.red)
+                            Spacer()
+                        }
+                    }
+                }
+                .frame(height: 100, alignment: .top)
+                
                 Button("Register") {
-                    if !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty {
+                    firstNameTouched = true
+                    lastNameTouched = true
+                    emailTouched = true
+                    
+                    if isFirstNameValid && isLastNameValid && isEmailValid {
                         UserDefaults.standard.set(firstName, forKey: kFirstName)
                         UserDefaults.standard.set(lastName, forKey: kLastName)
                         UserDefaults.standard.set(email, forKey: kEmail)

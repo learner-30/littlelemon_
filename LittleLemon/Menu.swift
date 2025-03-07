@@ -11,6 +11,7 @@ struct Menu: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @State var searchText = ""
+    @State var isLoaded = false
     
     var body: some View {
         VStack {
@@ -43,7 +44,11 @@ struct Menu: View {
                 }
             }
             .onAppear {
-                getMenuData()
+                if !isLoaded {
+                    getMenuData()
+                    isLoaded = true
+                }
+                
             }
         }
     }
