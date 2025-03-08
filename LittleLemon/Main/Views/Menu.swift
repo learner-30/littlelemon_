@@ -16,9 +16,9 @@ struct Menu: View {
     
     var body: some View {
         VStack {
-            Text("Little Lemon")
-            Text("Chicago")
-            Text("Little Lemon restaurant is ...")
+            Header()
+            LittleLemon()
+            OrderForDelivery()
             FetchedObjects(
                 predicate: buildPredicate(),
                 sortDescriptors: buildSortDescriptors()

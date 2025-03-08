@@ -27,7 +27,7 @@ struct Onboarding: View {
     }
     
     var isLastNameValid: Bool {
-        !firstName.isEmpty
+        !lastName.isEmpty
     }
     
     var isEmailValid: Bool {
@@ -38,83 +38,93 @@ struct Onboarding: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Header()
                 VStack {
-                    TextField("First Name", text: $firstName, onEditingChanged: { isEditting in
-                        if !isEditting { firstNameTouched = true}
-                    })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(firstNameTouched && !isFirstNameValid ? Color.red : Color.gray, lineWidth: 1))
-                    
-                    if firstNameTouched && !isFirstNameValid {
-                        HStack {
-                            Text("Required").foregroundStyle(Color.red)
-                            Spacer()
+                    VStack {
+                        TextField("First Name", text: $firstName, onEditingChanged: { isEditting in
+                            if !isEditting { firstNameTouched = true}
+                        })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(firstNameTouched && !isFirstNameValid ? Color.red : Color.gray, lineWidth: 1))
+                        
+                        if firstNameTouched && !isFirstNameValid {
+                            HStack {
+                                Text("Required").foregroundStyle(Color.red)
+                                Spacer()
+                            }
                         }
                     }
-                }
-                .frame(height: 100, alignment: .top)
-                
-                VStack {
-                    TextField("Last Name", text: $lastName, onEditingChanged: { isEditting in
-                        if !isEditting { lastNameTouched = true}
-                    })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(lastNameTouched && !isLastNameValid ? Color.red : Color.gray, lineWidth: 1))
+                    .frame(height: 70, alignment: .top)
                     
-                    if lastNameTouched && !isLastNameValid {
-                        HStack {
-                            Text("Required").foregroundStyle(Color.red)
-                            Spacer()
+                    VStack {
+                        TextField("Last Name", text: $lastName, onEditingChanged: { isEditting in
+                            if !isEditting { lastNameTouched = true}
+                        })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(lastNameTouched && !isLastNameValid ? Color.red : Color.gray, lineWidth: 1))
+                        
+                        if lastNameTouched && !isLastNameValid {
+                            HStack {
+                                Text("Required").foregroundStyle(Color.red)
+                                Spacer()
+                            }
                         }
                     }
-                }
-                .frame(height: 100, alignment: .top)
-                
-                VStack {
-                    TextField("Email", text: $email, onEditingChanged: { isEditting in
-                        if !isEditting { emailTouched = true}
-                    })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(emailTouched && !isEmailValid ? Color.red : Color.gray, lineWidth: 1))
-                    .keyboardType(.emailAddress)
+                    .frame(height: 70, alignment: .top)
                     
-                    if emailTouched && !isEmailValid {
-                        HStack {
-                            Text(email.isEmpty ? "Required" : "Invalid email").foregroundStyle(Color.red)
-                            Spacer()
+                    VStack {
+                        TextField("Email", text: $email, onEditingChanged: { isEditting in
+                            if !isEditting { emailTouched = true}
+                        })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(emailTouched && !isEmailValid ? Color.red : Color.gray, lineWidth: 1))
+                        .keyboardType(.emailAddress)
+                        
+                        if emailTouched && !isEmailValid {
+                            HStack {
+                                Text(email.isEmpty ? "Required" : "Invalid email").foregroundStyle(Color.red)
+                                Spacer()
+                            }
                         }
                     }
-                }
-                .frame(height: 100, alignment: .top)
-                
-                Button("Register") {
-                    firstNameTouched = true
-                    lastNameTouched = true
-                    emailTouched = true
+                    .frame(height: 70, alignment: .top)
                     
-                    if isFirstNameValid && isLastNameValid && isEmailValid {
-                        UserDefaults.standard.set(firstName, forKey: kFirstName)
-                        UserDefaults.standard.set(lastName, forKey: kLastName)
-                        UserDefaults.standard.set(email, forKey: kEmail)
-                        UserDefaults.standard.set(true, forKey: kIsLoggedIn)
-                        isLoggedIn = true
+                    Button("Register") {
+                        firstNameTouched = true
+                        lastNameTouched = true
+                        emailTouched = true
+                        
+                        if isFirstNameValid && isLastNameValid && isEmailValid {
+                            UserDefaults.standard.set(firstName, forKey: kFirstName)
+                            UserDefaults.standard.set(lastName, forKey: kLastName)
+                            UserDefaults.standard.set(email, forKey: kEmail)
+                            UserDefaults.standard.set(true, forKey: kIsLoggedIn)
+                            isLoggedIn = true
+                        }
                     }
-                }
-                .onAppear {
-                    if UserDefaults.standard.bool(forKey: kIsLoggedIn) {
-                        isLoggedIn = true
+                    .onAppear {
+                        if UserDefaults.standard.bool(forKey: kIsLoggedIn) {
+                            isLoggedIn = true
+                        }
+    //                    print(UserDefaults.standard.string(forKey: kFirstName) ?? "")
+    //                    print(UserDefaults.standard.string(forKey: kLastName) ?? "")
+    //                    print(UserDefaults.standard.string(forKey: kEmail) ?? "")
+    //                    print("\(UserDefaults.standard.bool(forKey: kIsLoggedIn))")
                     }
-//                    print(UserDefaults.standard.string(forKey: kFirstName) ?? "")
-//                    print(UserDefaults.standard.string(forKey: kLastName) ?? "")
-//                    print(UserDefaults.standard.string(forKey: kEmail) ?? "")
-//                    print("\(UserDefaults.standard.bool(forKey: kIsLoggedIn))")
+                    .navigationDestination(isPresented: $isLoggedIn) {
+                        Home()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 30)
+                    .foregroundStyle(Color.black)
+                    .background(Color.primary2)
+                    .cornerRadius(8)
                 }
-                .navigationDestination(isPresented: $isLoggedIn) {
-                    Home()
-                }
+                .padding([.top], 15)
+                .padding([.leading, .trailing], 15)
+                Spacer()
             }
         }
     }
