@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct Header: View {
+    @AppStorage("kIsLoggedIn") var isLoggedIn: Bool = false
+    
     var body: some View {
-        VStack {
+        ZStack {
             Image("Logo")
+            
+            if isLoggedIn {
+                HStack {
+                    Spacer()
+                    Image("profile-image-placeholder")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 50, height: 50)
+                }
+                .padding(.trailing, 10)
+            }
         }
         .frame(height: 60)
+//        .onAppear{print(isLoggedIn)}
     }
 }
 

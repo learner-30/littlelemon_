@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct UserProfile: View {
-    let firstName = UserDefaults.standard.string(forKey: kFirstName) ?? ""
-    let lastName = UserDefaults.standard.string(forKey: kLastName) ?? ""
-    let email = UserDefaults.standard.string(forKey: kEmail) ?? ""
+    @AppStorage("first name key") var storedFirstName: String = ""
+    @AppStorage("last name key") var storedLastName: String = ""
+    @AppStorage("email key") var storedEmail:String  = ""
+    @AppStorage("kIsLoggedIn") var storedIsLoggedIn : Bool = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,13 +22,13 @@ struct UserProfile: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 200, height: 200)
-            Text("First Name : \(firstName)")
-            Text("Last Name : \(lastName)")
-            Text("Email : \(email)")
+            Text("First Name : \(storedFirstName)")
+            Text("Last Name : \(storedLastName)")
+            Text("Email : \(storedEmail)")
             
             Spacer().frame(height: 30)
             Button("Logout") {
-                UserDefaults.standard.set(false, forKey: kIsLoggedIn)
+                storedIsLoggedIn = false
                 dismiss()
             }
             .frame(maxWidth: .infinity, maxHeight: 30)

@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-let kFirstName = "first name key"
-let kLastName = "last name key"
-let kEmail = "email key"
-let kIsLoggedIn = "kIsLoggedIn"
-
 struct Onboarding: View {
+    @AppStorage("first name key") var storedFirstName: String = ""
+    @AppStorage("last name key") var storedLastName: String = ""
+    @AppStorage("email key") var storedEmail:String  = ""
+    @AppStorage("kIsLoggedIn") var storedIsLoggedIn : Bool = false
+    
     @State var firstName = ""
     @State var lastName = ""
     @State var email = ""
@@ -98,21 +98,21 @@ struct Onboarding: View {
                         emailTouched = true
                         
                         if isFirstNameValid && isLastNameValid && isEmailValid {
-                            UserDefaults.standard.set(firstName, forKey: kFirstName)
-                            UserDefaults.standard.set(lastName, forKey: kLastName)
-                            UserDefaults.standard.set(email, forKey: kEmail)
-                            UserDefaults.standard.set(true, forKey: kIsLoggedIn)
+                            storedFirstName = firstName
+                            storedLastName = lastName
+                            storedEmail = email
                             isLoggedIn = true
+                            storedIsLoggedIn = isLoggedIn
                         }
                     }
                     .onAppear {
-                        if UserDefaults.standard.bool(forKey: kIsLoggedIn) {
+                        if storedIsLoggedIn {
                             isLoggedIn = true
                         }
-    //                    print(UserDefaults.standard.string(forKey: kFirstName) ?? "")
-    //                    print(UserDefaults.standard.string(forKey: kLastName) ?? "")
-    //                    print(UserDefaults.standard.string(forKey: kEmail) ?? "")
-    //                    print("\(UserDefaults.standard.bool(forKey: kIsLoggedIn))")
+//                        print(storedFirstName)
+//                        print(storedLastName)
+//                        print(storedEmail)
+//                        print(storedIsLoggedIn)
                     }
                     .navigationDestination(isPresented: $isLoggedIn) {
                         Home()
