@@ -44,7 +44,18 @@ struct Menu: View {
             .padding([.leading, .trailing], 15)
             .background(Color.primary1)
             
+            HStack {
+                Text("ORDER FOR DELIVERY")
+                    .font(.weekSpecialSection)
+                Spacer()
+            }
+            .padding([.top, .bottom], 5)
+            .padding([.leading, .trailing], 15)
+            
             OrderForDelivery(selectedCategory: $selectedCategory)
+            
+            Divider()
+            
             FetchedObjects(
                 predicate: buildPredicate(),
                 sortDescriptors: buildSortDescriptors()

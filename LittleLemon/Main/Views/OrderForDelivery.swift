@@ -9,14 +9,17 @@ import SwiftUI
 
 struct OrderForDelivery: View {
     @Binding var selectedCategory: String
+    let categories = ["starters", "mains", "desserts"]
     
     var body: some View {
-        HStack(spacing: 15) {
-            OrderForDeliveryButton(category: "starters", selectedCategory: $selectedCategory)
-            OrderForDeliveryButton(category: "mains", selectedCategory: $selectedCategory)
-            OrderForDeliveryButton(category: "desserts", selectedCategory: $selectedCategory)
+        HStack {
+            ForEach(categories, id: \.self) { category in
+                OrderForDeliveryButton(category: category, selectedCategory: $selectedCategory)
+                Spacer()
+            }
             OrderForDeliveryButton(category: "sides", selectedCategory: $selectedCategory)
         }
+        .padding([.leading, .trailing], 15)
     }
 }
 
@@ -34,18 +37,18 @@ struct OrderForDeliveryButton: View {
         }
             .padding(10)
 //            .font(.system(size: 18, weight: .bold))
-            .font(.custom("Karla-Regular_Medium", size: 18))
+            .font(.weekSpecialSection)
             .foregroundStyle(selectedCategory == category ? Color.white : Color.black)
             .background(selectedCategory == category ? Color.primary1 : Color.secondary1)
             .cornerRadius(8)
     }
 }
 
-#Preview {
-    OrderForDeliveryButton(category: "starters", selectedCategory: .constant(""))
-    OrderForDeliveryButton(category: "starters", selectedCategory: .constant("starters"))
-}
-
 //#Preview {
-//    OrderForDelivery()
+//    OrderForDeliveryButton(category: "starters", selectedCategory: .constant(""))
+//    OrderForDeliveryButton(category: "starters", selectedCategory: .constant("starters"))
 //}
+
+#Preview {
+    OrderForDelivery(selectedCategory: .constant(""))
+}

@@ -13,7 +13,7 @@ struct LittleLemon: View {
             HStack {
                 Text("Little Lemon")
                     .foregroundStyle(Color.primary2)
-                    .font(.custom("MarkaziText-Medium", size: 64))
+                    .font(.displayTitle)
                 Spacer()
             }
             Spacer().frame(height: 0)
@@ -22,7 +22,7 @@ struct LittleLemon: View {
                     HStack {
                         Text("Chicago")
                             .foregroundStyle(Color.white)
-                            .font(.custom("MarkaziText-Regular", size: 40))
+                            .font(.subTitle)
                         Spacer()
                     }
                     Text(
@@ -35,7 +35,7 @@ struct LittleLemon: View {
                         """
                     )
                     .foregroundStyle(Color.white)
-                    .font(.custom("Karla-Regular_Medium", size: 18))
+                    .font(.leadText)
                 }
                 Image("Hero-image")
                     .resizable()
