@@ -12,6 +12,7 @@ struct Menu: View {
     
     @ObservedObject var dishesModel = DishesModel()
     @State var searchText = ""
+    @State var selectedCategory = ""
     @State var isLoaded = false
     
     var body: some View {
@@ -21,6 +22,9 @@ struct Menu: View {
                 LittleLemon()
                 HStack {
                     TextField("Search menu", text: $searchText)
+//                        .onChange(of: searchText) {
+//                            print(searchText)
+//                        }
                         .padding(.leading, 30)
                         .padding([.top, .bottom], 10)
                         .background(RoundedRectangle(cornerRadius: 8).fill(.white))
@@ -40,7 +44,7 @@ struct Menu: View {
             .padding([.leading, .trailing], 15)
             .background(Color.primary1)
             
-            OrderForDelivery()
+            OrderForDelivery(selectedCategory: $selectedCategory)
             FetchedObjects(
                 predicate: buildPredicate(),
                 sortDescriptors: buildSortDescriptors()
@@ -64,6 +68,7 @@ struct Menu: View {
                         }
                     }
                 }
+                .listStyle(.plain)
             }
             .onAppear {
                 if !isLoaded {
@@ -86,11 +91,20 @@ struct Menu: View {
     }
     
     func buildPredicate() -> NSPredicate {
-        if searchText.isEmpty {
-            return NSPredicate(value: true)
-        } else {
-            return NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+        var predicate1 = NSPredicate(value: true)
+        var predicate2 = NSPredicate(value: true)
+        
+        if !selectedCategory.isEmpty {
+            predicate1 = NSPredicate(format: "category == %@", selectedCategory)
         }
+        if !searchText.isEmpty {
+            predicate2 = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+        }
+        
+        return NSCompoundPredicate(
+            type: .and,
+            subpredicates: [predicate1, predicate2]
+        )
     }
 }
 

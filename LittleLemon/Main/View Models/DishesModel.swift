@@ -27,6 +27,7 @@ class DishesModel: ObservableObject {
                             dish.title = menuItem.title
                             dish.image = menuItem.image
                             dish.price = menuItem.price
+                            dish.category = menuItem.category
                         }
                         try? context.save()
                     }

@@ -2,7 +2,7 @@
 //  Dish+CoreDataProperties.swift
 //  LittleLemon
 //
-//  Created by Xcode on 2025/03/06.
+//  Created by Xcode on 2025/03/10.
 //
 //
 
@@ -16,9 +16,10 @@ extension Dish {
         return NSFetchRequest<Dish>(entityName: "Dish")
     }
 
-    @NSManaged public var title: String?
-    @NSManaged public var price: String?
     @NSManaged public var image: String?
+    @NSManaged public var price: String?
+    @NSManaged public var title: String?
+    @NSManaged public var category: String?
 
 }
 
