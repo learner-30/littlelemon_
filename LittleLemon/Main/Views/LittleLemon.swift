@@ -46,13 +46,13 @@ struct LittleLemon: View {
             .frame(height: 170)
             Spacer()
         }
-        .frame(height: 270)
-        .padding([.top, .bottom], 10)
-        .padding([.leading, .trailing], 15)
-        .background(Color.primary1)
     }
 }
 
 #Preview {
     LittleLemon()
+        .frame(height: 270)
+        .padding([.top, .bottom], 10)
+        .padding([.leading, .trailing], 15)
+        .background(Color.primary1)
 }

@@ -17,7 +17,29 @@ struct Menu: View {
     var body: some View {
         VStack {
             Header()
-            LittleLemon()
+            VStack {
+                LittleLemon()
+                HStack {
+                    TextField("Search menu", text: $searchText)
+                        .padding(.leading, 30)
+                        .padding([.top, .bottom], 10)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.white))
+                        .overlay(
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundStyle(.gray)
+                                    .padding(.leading, 5)
+                                Spacer()
+                            }
+                        )
+                }
+                Spacer()
+            }
+            .frame(height: 310)
+            .padding([.top, .bottom], 10)
+            .padding([.leading, .trailing], 15)
+            .background(Color.primary1)
+            
             OrderForDelivery()
             FetchedObjects(
                 predicate: buildPredicate(),
@@ -25,7 +47,6 @@ struct Menu: View {
             ) {
                 (dishes: [Dish]) in
                 List {
-                    TextField("Search menu", text: $searchText)
                     ForEach(dishes) { dish in
                         HStack {
                             Text(dish.title!)
